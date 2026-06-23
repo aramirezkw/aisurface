@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KWIQ AI Surface — 5 Concepts</title>
+<!-- XDS tokens throughout: system.action/Hover/containerTinted/divider, neutral.label*,
+     neutral.pageBackground/containerBackground/divider; Mulish; 8px spacing; button radius 4px. -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400..900;1,400..900&display=swap');
+:root{
+  --system-action:#006C84;--system-action-hover:#0E4E5D;--system-tinted:#D5F7FF;--system-divider:rgba(0,108,132,.1);
+  --label-primary:#282B33;--label-secondary:#3D424D;--label-tertiary:#6C727E;
+  --page-bg:#F7F7F8;--container-bg:#FFFFFF;--container-tinted:#E4E5E7;--divider:rgba(43,43,51,.1);
+  --space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;
+  --shadow12:0 4px 12px rgba(40,43,51,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body,*{font-family:'Mulish',sans-serif}
+body{background:var(--page-bg);color:var(--label-primary);-webkit-font-smoothing:antialiased;min-height:100vh}
+.wrap{max-width:1240px;margin:0 auto;padding:0 var(--space-6)}
+a{color:inherit;text-decoration:none}
+.reveal{opacity:0;transform:translateY(20px);transition:.6s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}
+/* header */
+header{padding:var(--space-8) 0 var(--space-4)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:var(--space-3)}
+.brand .logo{width:42px;height:42px;border-radius:12px;background:var(--system-action);color:#fff;display:grid;place-items:center;font-weight:900;font-size:18px}
+.brand b{display:block;font-size:18px;font-weight:900;line-height:1.1;letter-spacing:-.01em}
+.brand span{font-size:13px;color:var(--label-tertiary);font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--container-bg);border:1px solid var(--divider);padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;color:var(--label-secondary)}
+.chip .dot{width:7px;height:7px;border-radius:999px;background:#0B8331}
+.head{padding:var(--space-6) 0 var(--space-8);max-width:760px}
+.kicker{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--system-action);margin-bottom:var(--space-3)}
+.head h1{font-size:36px;line-height:44px;font-weight:900;letter-spacing:-.02em}
+.head p{margin-top:var(--space-3);font-size:17px;line-height:26px;color:var(--label-secondary);max-width:640px;font-weight:500}
+.meta{display:flex;gap:var(--space-2);flex-wrap:wrap;margin-top:var(--space-6)}
+.meta .m{background:var(--container-bg);border:1px solid var(--divider);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:11px}
+.meta .sw{width:26px;height:26px;border-radius:7px;border:1px solid rgba(0,0,0,.06)}
+.meta .m b{font-weight:800;font-size:14px;display:block;line-height:1.2}
+.meta .m small{font-size:12px;color:var(--label-tertiary);font-weight:600}
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);padding:0 0 var(--space-6)}
+.card{background:var(--container-bg);border:1px solid var(--divider);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s,border-color .35s}
+.card:hover{transform:translateY(-6px);box-shadow:0 24px 44px -28px rgba(40,43,51,.5);border-color:transparent}
+.thumb{position:relative;height:280px;overflow:hidden;border-bottom:1px solid var(--divider);background:var(--page-bg)}
+.thumb iframe{width:1200px;height:1200px;border:0;background:#fff;transform:scale(.317);transform-origin:top left;pointer-events:none}
+.veil{position:absolute;inset:0;z-index:2}
+.num{position:absolute;top:12px;left:12px;z-index:3;width:32px;height:32px;border-radius:8px;background:var(--system-action);color:#fff;font-weight:900;display:grid;place-items:center;font-size:14px}
+.open{position:absolute;bottom:12px;right:12px;z-index:3;background:rgba(255,255,255,.94);border:1px solid var(--divider);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:800;color:var(--system-action);display:flex;align-items:center;gap:6px;opacity:0;transform:translateY(8px);transition:.3s cubic-bezier(.16,1,.3,1)}
+.card:hover .open{opacity:1;transform:none}
+.body{padding:var(--space-4) var(--space-4) var(--space-6);display:flex;flex-direction:column;flex:1}
+.name{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.name h3{font-size:18px;font-weight:900;letter-spacing:-.01em}
+.badge{font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:var(--system-tinted);color:var(--system-action)}
+.desc{margin-top:8px;font-size:14px;line-height:20px;color:var(--label-secondary);font-weight:500}
+.tags{margin-top:var(--space-3);display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11.5px;font-weight:700;color:var(--label-tertiary);background:var(--page-bg);border:1px solid var(--divider);padding:4px 9px;border-radius:999px}
+.actions{margin-top:auto;padding-top:var(--space-4);display:flex;gap:8px}
+.btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;font-weight:800;font-size:13.5px;padding:11px 14px;border-radius:4px;border:none;cursor:pointer;transition:background .2s,transform .2s}
+.btn-block{background:var(--system-action);color:#fff}
+.btn-block:hover{background:var(--system-action-hover);transform:translateY(-1px)}
+.btn-bordered{flex:none;background:transparent;color:var(--system-action);border:1.5px solid var(--system-action)}
+.btn-bordered:hover{background:var(--system-tinted);transform:translateY(-1px)}
+/* note */
+.note{margin:var(--space-4) 0 var(--space-12);background:var(--container-bg);border:1px solid var(--divider);border-radius:16px;padding:var(--space-6);display:flex;gap:var(--space-4);align-items:flex-start;flex-wrap:wrap}
+.note .ic{flex:none;width:42px;height:42px;border-radius:11px;background:var(--system-tinted);color:var(--system-action);display:grid;place-items:center}
+.note h4{font-size:15px;font-weight:900;margin-bottom:4px}
+.note p{font-size:14px;line-height:21px;color:var(--label-secondary);max-width:660px;font-weight:500}
+.note code{background:var(--page-bg);border:1px solid var(--divider);padding:2px 6px;border-radius:6px;font-size:12.5px;font-family:ui-monospace,monospace}
+.note .links{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.note .links a{font-size:12.5px;font-weight:800;color:var(--system-action);background:var(--page-bg);border:1px solid var(--divider);padding:7px 11px;border-radius:999px;transition:.2s}
+.note .links a:hover{background:var(--system-tinted);transform:translateY(-2px)}
+footer{padding:0 0 var(--space-12);color:var(--label-tertiary);font-size:13px;font-weight:600;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--divider);padding-top:var(--space-6)}
+@media(max-width:980px){.grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="top">
+      <div class="brand"><div class="logo">K</div><div><b>KWIQ AI Surface</b><span>Empty-state concepts · XDS</span></div></div>
+      <span class="chip"><span class="dot"></span>5 concepts ready for review</span>
+    </div>
+  </header>
+
+  <div class="head">
+    <div class="kicker reveal">Concept review</div>
+    <h1 class="reveal d1">Five directions for the KWIQ AI surface</h1>
+    <p class="reveal d2">A modern, minimalist, and approachable AI home for KW agents — built on XDS (Mulish, teal <code style="font-size:14px;background:none;border:none;color:var(--system-action);font-weight:800">system.action</code>, 8px spacing). Each keeps the greeting, prompt starters, model selector, and <code style="font-size:14px;background:none;border:none;color:var(--label-secondary);font-weight:700">@</code>-a-tab context — but frames them differently. Click any preview to open the full surface.</p>
+    <div class="meta reveal d3">
+      <div class="m"><span class="sw" style="background:#006C84"></span><div><b>#006C84</b><small>system.action</small></div></div>
+      <div class="m"><span class="sw" style="background:#D5F7FF"></span><div><b>#D5F7FF</b><small>system.containerTinted</small></div></div>
+      <div class="m"><span class="sw" style="background:#282B33"></span><div><b>#282B33</b><small>label.primary</small></div></div>
+      <div class="m"><span class="sw" style="background:#F7F7F8;border-color:#ddd"></span><div><b>Mulish</b><small>type family</small></div></div>
+    </div>
+  </div>
+
+  <section class="grid" id="grid"></section>
+
+  <div class="note reveal">
+    <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2Z"/></svg></span>
+    <div>
+      <h4>How to share this</h4>
+      <p>Serve this folder and send the link — reviewers can click through all five. Run <code>python3 -m http.server 8899</code> from <code>kwiq-ai-concepts/</code>, then open <code>localhost:8899</code>. Self-contained static HTML; only Mulish loads externally.</p>
+    </div>
+    <div class="links">
+      <a href="concept-1-composer.html">01 · Composer</a>
+      <a href="concept-2-lanes.html">02 · Lanes</a>
+      <a href="concept-3-concierge.html">03 · Concierge</a>
+      <a href="concept-4-cards.html">04 · Cards</a>
+      <a href="concept-5-workspace.html">05 · Workspace</a>
+    </div>
+  </div>
+
+  <footer><span>KWIQ AI Surface · Concept dashboard</span><span>5 directions · XDS tokens · 2026</span></footer>
+</div>
+
+<script>
+const CONCEPTS=[
+  {n:'01',file:'concept-1-composer.html',name:'Composer-First',badge:'Radical minimal',desc:'Everything collapses to one centered input. Calmest, least intimidating entry — the cursor is the hero, chips tuck below.',tags:['Centered composer','Chip starters','Live focus ring']},
+  {n:'02',file:'concept-2-lanes.html',name:'Intent Lanes',badge:'Most scannable',desc:'Actions grouped into Grow / Create / Plan columns so a new agent instantly understands what KWIQ can do.',tags:['3 themed lanes','Hover-slide prompts','Pinned composer']},
+  {n:'03',file:'concept-3-concierge.html',name:'Warm Concierge',badge:'Approachable',desc:'Time-of-day greeting on a soft teal-tinted hero. Promotes the @-a-tab gesture; warm without leaving Mulish.',tags:['Tinted hero','Add-context CTA','Slim chip row']},
+  {n:'04',file:'concept-4-cards.html',name:'Preview Cards',badge:'Most visual',desc:'Each starter previews its output — a pipeline sparkline, lead avatars, a draft snippet, a market trend line.',tags:['Output glimpses','Animated sparkline','2×2 grid']},
+  {n:'05',file:'concept-5-workspace.html',name:'Workspace Command',badge:'Power user',desc:'Sidebar-integrated. The @-tab context, Tools, model selector, and connected data sources all live in the composer.',tags:['Left nav','Connected data','Inline tools']}
+];
+const grid=document.getElementById('grid');
+CONCEPTS.forEach((c,i)=>{
+  const el=document.createElement('article');
+  el.className='card reveal '+(['d1','d2','d3'][i%3]);
+  el.innerHTML=`
+    <div class="thumb">
+      <span class="num">${c.n}</span>
+      <a class="veil" href="${c.file}"></a>
+      <span class="open">Open full surface →</span>
+      <iframe src="${c.file}" loading="lazy" scrolling="no" title="${c.name} preview"></iframe>
+    </div>
+    <div class="body">
+      <div class="name"><h3>${c.name}</h3><span class="badge">${c.badge}</span></div>
+      <p class="desc">${c.desc}</p>
+      <div class="tags">${c.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="actions">
+        <a class="btn btn-block" href="${c.file}">View concept</a>
+        <a class="btn btn-bordered" href="${c.file}" target="_blank" title="Open in new tab">↗</a>
+      </div>
+    </div>`;
+  grid.appendChild(el);
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

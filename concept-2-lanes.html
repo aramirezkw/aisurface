@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KWIQ · Concept 2 — Intent Lanes</title>
+<!-- XDS tokens: system.action/Hover/containerTinted, neutral.label*, neutral.pageBackground/containerBackground,
+     neutral.divider; Mulish; 8px spacing; button radius 4px; textStyleCaps for lane labels. -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400..900;1,400..900&display=swap');
+:root{
+  --system-action:#006C84;--system-action-hover:#0E4E5D;--system-tinted:#D5F7FF;--system-divider:rgba(0,108,132,.1);
+  --label-primary:#282B33;--label-secondary:#3D424D;--label-tertiary:#6C727E;
+  --page-bg:#F7F7F8;--container-bg:#FFFFFF;--container-tinted:#E4E5E7;--divider:rgba(43,43,51,.1);
+  --space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;
+  --shadow12:0 4px 12px rgba(40,43,51,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body,*{font-family:'Mulish',sans-serif}
+body{background:var(--page-bg);color:var(--label-primary);-webkit-font-smoothing:antialiased}
+.panel{max-width:980px;margin:0 auto;min-height:100vh;background:var(--container-bg);display:flex;flex-direction:column}
+.chrome{height:56px;display:flex;align-items:center;justify-content:flex-end;gap:4px;padding:0 var(--space-4);border-bottom:1px solid var(--divider)}
+.icon-btn{width:36px;height:36px;border-radius:4px;display:grid;place-items:center;background:none;border:none;color:var(--label-secondary);cursor:pointer;transition:background .18s,color .18s}
+.icon-btn:hover{background:rgba(61,66,77,.06);color:var(--label-primary)}
+.surface{flex:1;display:flex;flex-direction:column;padding:var(--space-12) var(--space-8) var(--space-6);max-width:880px;width:100%;margin:0 auto}
+.greet{margin-bottom:var(--space-8)}
+.avatar-row{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-4)}
+.avatar{width:36px;height:36px;border-radius:999px;background:var(--system-tinted);color:var(--system-action);display:grid;place-items:center;font-weight:800;font-size:15px}
+h1{font-size:32px;line-height:40px;font-weight:800;letter-spacing:-.01em}
+h1 .hi{color:var(--system-action)}
+.sub{font-size:20px;line-height:28px;font-weight:700;color:var(--label-tertiary);margin-top:var(--space-2)}
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);flex:1;align-content:start}
+.lane{opacity:0;transform:translateY(16px);animation:laneIn .6s cubic-bezier(.16,1,.3,1) forwards}
+.lane-head{display:flex;align-items:center;gap:var(--space-2);padding:0 var(--space-2) var(--space-3)}
+.lane-ic{width:28px;height:28px;border-radius:8px;background:var(--system-tinted);color:var(--system-action);display:grid;place-items:center}
+.lane-label{font-size:12px;line-height:16px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--label-secondary)}
+.prompt{display:flex;align-items:center;gap:var(--space-3);width:100%;text-align:left;background:none;border:none;border-radius:8px;padding:12px var(--space-2);font-size:15px;line-height:20px;font-weight:600;color:var(--label-primary);cursor:pointer;transition:background .18s,padding .2s ease,color .18s}
+.prompt:hover{background:var(--page-bg);padding-left:14px;color:var(--system-action)}
+.prompt svg{color:var(--label-tertiary);flex:none;transition:color .18s,transform .2s ease}
+.prompt:hover svg{color:var(--system-action);transform:translateX(2px)}
+@keyframes laneIn{to{opacity:1;transform:none}}
+/* composer pinned */
+.composer-wrap{position:sticky;bottom:0;background:linear-gradient(to top,var(--container-bg) 70%,transparent);padding:var(--space-6) var(--space-8) var(--space-8);margin:0 auto;width:100%;max-width:880px}
+.composer{border:1.5px solid var(--divider);border-radius:14px;background:var(--container-bg);box-shadow:var(--shadow12);display:flex;align-items:center;gap:var(--space-2);padding:8px 8px 8px var(--space-4);transition:border-color .2s,box-shadow .2s}
+.composer:focus-within{border-color:var(--system-action);box-shadow:0 0 0 4px var(--system-divider)}
+.composer input{flex:1;border:none;outline:none;font-size:16px;color:var(--label-primary);background:none}
+.composer input::placeholder{color:var(--label-tertiary)}
+.model{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--label-secondary);background:none;border:none;padding:6px 8px;border-radius:4px;cursor:pointer;transition:background .18s}
+.model:hover{background:rgba(61,66,77,.06)}
+.send{width:36px;height:36px;border-radius:4px;border:none;background:var(--system-action);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .18s,transform .18s}
+.send:hover{background:var(--system-action-hover)}.send:active{transform:scale(.94)}
+.fade{opacity:0;animation:laneIn .6s cubic-bezier(.16,1,.3,1) forwards}
+@media(max-width:760px){.lanes{grid-template-columns:1fr;gap:var(--space-6)}.surface{padding:var(--space-8) var(--space-4) var(--space-4)}h1{font-size:24px;line-height:32px}}
+</style>
+</head>
+<body>
+<div class="panel">
+  <div class="chrome">
+    <button class="icon-btn" aria-label="More"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg></button>
+    <button class="icon-btn" aria-label="Open in new window"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></button>
+    <button class="icon-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+
+  <div class="surface">
+    <div class="greet fade">
+      <div class="avatar-row"><div class="avatar">N</div></div>
+      <h1><span class="hi">Hello, Nina.</span> What's the focus today?</h1>
+      <div class="sub">Pick a starting point, or just ask.</div>
+    </div>
+
+    <div class="lanes" id="lanes"></div>
+  </div>
+
+  <div class="composer-wrap fade" style="animation-delay:.35s">
+    <div class="composer">
+      <input placeholder="Ask anything, or type @ to reference a tab" />
+      <button class="model">KWIQ Flash <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+      <button class="send" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<script>
+const I={
+  grow:'<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>',
+  create:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  plan:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  cube:'<path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/>',
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  folder:'<path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9L9.6 3.9A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>',
+  pencil:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  speaker:'<path d="m3 11 18-5v12L3 14v-3z"/>',
+  bars:'<path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6"/><rect x="12" y="7" width="3" height="10"/><rect x="17" y="13" width="3" height="4"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>'
+};
+const LANES=[
+  {label:'Grow',icon:'grow',items:[['cube','Summarize my pipeline'],['user','Find contacts to call today'],['list','Follow up with leads']]},
+  {label:'Create',icon:'create',items:[['pencil','Draft a listing description'],['speaker','Generate a social post'],['bars','Write a market update email']]},
+  {label:'Plan',icon:'plan',items:[['folder','Analyze a recent comp'],['doc','Create a smart plan'],['cube','Review this week’s goals']]}
+];
+const svg=(p,s=18,w=1.8)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${I[p]}</svg>`;
+const root=document.getElementById('lanes');
+LANES.forEach((lane,li)=>{
+  const col=document.createElement('div'); col.className='lane'; col.style.animationDelay=(0.1+li*0.1)+'s';
+  col.innerHTML=`<div class="lane-head"><span class="lane-ic">${svg(lane.icon,16,2)}</span><span class="lane-label">${lane.label}</span></div>`;
+  lane.items.forEach(it=>{
+    const b=document.createElement('button'); b.className='prompt';
+    b.innerHTML=`${svg(it[0],18,1.8)}<span>${it[1]}</span>`;
+    col.appendChild(b);
+  });
+  root.appendChild(col);
+});
+</script>
+</body>
+</html>

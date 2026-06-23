@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KWIQ · Concept 4 — Preview Cards</title>
+<!-- XDS tokens: system.action/Hover/containerTinted/divider, green.action/Tinted, neutral.label*,
+     neutral.pageBackground/containerBackground/divider; Mulish; 8px spacing; Card pattern; button radius 4px. -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400..900;1,400..900&display=swap');
+:root{
+  --system-action:#006C84;--system-action-hover:#0E4E5D;--system-tinted:#D5F7FF;--system-divider:rgba(0,108,132,.1);
+  --green-action:#026E24;--green-tinted:#D6F2DF;
+  --label-primary:#282B33;--label-secondary:#3D424D;--label-tertiary:#6C727E;
+  --page-bg:#F7F7F8;--container-bg:#FFFFFF;--divider:rgba(43,43,51,.1);
+  --space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;
+  --shadow12:0 4px 12px rgba(40,43,51,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body,*{font-family:'Mulish',sans-serif}
+body{background:var(--page-bg);color:var(--label-primary);-webkit-font-smoothing:antialiased}
+.panel{max-width:960px;margin:0 auto;min-height:100vh;background:var(--container-bg);display:flex;flex-direction:column}
+.chrome{height:56px;display:flex;align-items:center;justify-content:flex-end;gap:4px;padding:0 var(--space-4);border-bottom:1px solid var(--divider)}
+.icon-btn{width:36px;height:36px;border-radius:4px;display:grid;place-items:center;background:none;border:none;color:var(--label-secondary);cursor:pointer;transition:background .18s,color .18s}
+.icon-btn:hover{background:rgba(61,66,77,.06);color:var(--label-primary)}
+.surface{flex:1;display:flex;flex-direction:column;padding:var(--space-12) var(--space-8) var(--space-6);max-width:860px;width:100%;margin:0 auto}
+.greet{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-8)}
+.avatar{width:40px;height:40px;border-radius:999px;background:var(--system-tinted);color:var(--system-action);display:grid;place-items:center;font-weight:800;font-size:16px;flex:none}
+h1{font-size:28px;line-height:36px;font-weight:800;letter-spacing:-.01em}
+h1 .hi{color:var(--system-action)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);flex:1;align-content:start}
+.card{border:1px solid var(--divider);border-radius:14px;background:var(--container-bg);padding:var(--space-4);cursor:pointer;transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s,border-color .25s;opacity:0;transform:translateY(16px);animation:cardIn .55s cubic-bezier(.16,1,.3,1) forwards}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow12);border-color:transparent}
+.card-head{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-3)}
+.card-ic{width:30px;height:30px;border-radius:8px;background:var(--system-tinted);color:var(--system-action);display:grid;place-items:center;flex:none}
+.card-title{font-size:15px;line-height:20px;font-weight:800}
+.card-sub{font-size:12px;line-height:16px;color:var(--label-tertiary);font-weight:600}
+.preview{margin-top:var(--space-2);border-radius:10px;background:var(--page-bg);padding:var(--space-3);min-height:88px;display:flex;align-items:flex-end}
+@keyframes cardIn{to{opacity:1;transform:none}}
+/* sparkline bars */
+.spark{display:flex;align-items:flex-end;gap:6px;height:64px;width:100%}
+.spark i{flex:1;background:var(--system-tinted);border-radius:4px 4px 0 0;height:0;transition:height .9s cubic-bezier(.16,1,.3,1)}
+.spark i.hot{background:var(--system-action)}
+/* avatars */
+.av-row{display:flex;align-items:center}
+.av-row span{width:34px;height:34px;border-radius:999px;border:2px solid var(--page-bg);margin-left:-8px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff}
+.av-row span:first-child{margin-left:0}
+.av-meta{margin-left:var(--space-3)}
+.av-meta b{font-size:20px;font-weight:900;display:block;line-height:1}
+.av-meta small{font-size:12px;color:var(--label-tertiary);font-weight:600}
+/* draft lines */
+.lines{width:100%}
+.lines i{display:block;height:8px;border-radius:4px;background:var(--container-tinted,#E4E5E7);margin-bottom:8px;width:0;animation:grow .8s cubic-bezier(.16,1,.3,1) forwards}
+.lines i:nth-child(1){animation-delay:.1s}.lines i:nth-child(2){animation-delay:.18s}.lines i:nth-child(3){animation-delay:.26s}
+@keyframes grow{to{width:var(--w)}}
+/* line chart */
+.linechart{width:100%;height:64px}
+.linechart path.area{fill:var(--system-tinted)}
+.linechart path.line{fill:none;stroke:var(--system-action);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:300;stroke-dashoffset:300;animation:draw 1.2s cubic-bezier(.16,1,.3,1) .2s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--green-action);background:var(--green-tinted);padding:3px 8px;border-radius:999px}
+/* composer */
+.composer-wrap{position:sticky;bottom:0;background:linear-gradient(to top,var(--container-bg) 72%,transparent);padding:var(--space-6) var(--space-8) var(--space-8);width:100%;max-width:860px;margin:0 auto}
+.composer{border:1.5px solid var(--divider);border-radius:14px;background:var(--container-bg);box-shadow:var(--shadow12);display:flex;align-items:center;gap:var(--space-2);padding:8px 8px 8px var(--space-4);transition:border-color .2s,box-shadow .2s}
+.composer:focus-within{border-color:var(--system-action);box-shadow:0 0 0 4px var(--system-divider)}
+.composer input{flex:1;border:none;outline:none;font-size:16px;color:var(--label-primary);background:none}
+.composer input::placeholder{color:var(--label-tertiary)}
+.model{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--label-secondary);background:none;border:none;padding:6px 8px;border-radius:4px;cursor:pointer;transition:background .18s}
+.model:hover{background:rgba(61,66,77,.06)}
+.send{width:36px;height:36px;border-radius:4px;border:none;background:var(--system-action);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .18s,transform .18s}
+.send:hover{background:var(--system-action-hover)}.send:active{transform:scale(.94)}
+.fade{opacity:0;animation:cardIn .6s cubic-bezier(.16,1,.3,1) forwards}
+@media(max-width:680px){.cards{grid-template-columns:1fr}.surface{padding:var(--space-8) var(--space-4) var(--space-4)}h1{font-size:22px;line-height:30px}}
+</style>
+</head>
+<body>
+<div class="panel">
+  <div class="chrome">
+    <button class="icon-btn" aria-label="More"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg></button>
+    <button class="icon-btn" aria-label="Open in new window"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></button>
+    <button class="icon-btn" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+
+  <div class="surface">
+    <div class="greet fade">
+      <div class="avatar">N</div>
+      <h1><span class="hi">Hello, Nina.</span> Here's where to start</h1>
+    </div>
+
+    <div class="cards">
+      <!-- pipeline -->
+      <div class="card" style="animation-delay:.1s">
+        <div class="card-head">
+          <span class="card-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6"/><rect x="12" y="7" width="3" height="10"/><rect x="17" y="13" width="3" height="4"/></svg></span>
+          <div><div class="card-title">Summarize my pipeline</div><div class="card-sub">42 active · $8.4M volume</div></div>
+        </div>
+        <div class="preview"><div class="spark" id="spark"></div></div>
+      </div>
+
+      <!-- leads -->
+      <div class="card" style="animation-delay:.18s">
+        <div class="card-head">
+          <span class="card-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+          <div><div class="card-title">Find contacts to call today</div><div class="card-sub">Prioritized by likelihood to close</div></div>
+        </div>
+        <div class="preview">
+          <div class="av-row">
+            <span style="background:#006C84">JL</span><span style="background:#0F5EAD">MR</span><span style="background:#6730B4">SK</span><span style="background:#A73B06">DT</span>
+            <div class="av-meta"><b>7</b><small>warm leads ready</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- listing draft -->
+      <div class="card" style="animation-delay:.26s">
+        <div class="card-head">
+          <span class="card-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+          <div><div class="card-title">Draft a listing description</div><div class="card-sub">412 Oakmont Dr · 4bd / 3ba</div></div>
+        </div>
+        <div class="preview">
+          <div class="lines">
+            <i style="--w:100%"></i><i style="--w:92%"></i><i style="--w:60%"></i>
+            <span class="tag">✓ MLS-ready draft</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- market email -->
+      <div class="card" style="animation-delay:.34s">
+        <div class="card-head">
+          <span class="card-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
+          <div><div class="card-title">Write a market update email</div><div class="card-sub">78704 · median +3.2% MoM</div></div>
+        </div>
+        <div class="preview">
+          <svg class="linechart" viewBox="0 0 200 64" preserveAspectRatio="none">
+            <path class="area" d="M0,50 L25,44 L50,46 L75,34 L100,36 L125,24 L150,26 L175,14 L200,12 L200,64 L0,64 Z"/>
+            <path class="line" d="M0,50 L25,44 L50,46 L75,34 L100,36 L125,24 L150,26 L175,14 L200,12"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="composer-wrap fade" style="animation-delay:.4s">
+    <div class="composer">
+      <input placeholder="Ask anything, or type @ to reference a tab" />
+      <button class="model">KWIQ Flash <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+      <button class="send" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<script>
+// animate sparkline
+const heights=[34,52,40,60,48,72,58,90];
+const spark=document.getElementById('spark');
+heights.forEach((h,i)=>{const b=document.createElement('i');if(i===heights.length-1)b.className='hot';spark.appendChild(b);
+  setTimeout(()=>b.style.height=h+'%',300+i*70);});
+</script>
+</body>
+</html>
